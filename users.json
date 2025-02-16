@@ -1,0 +1,36 @@
+{
+    "rushi": "123",
+    "12": "1",
+    "spider": "123",
+    "admin": {
+        "password": "admin123",
+        "access": [
+            "rushi"
+        ]
+    },
+    "history": {
+        "rushi": {
+            "name": "rushi",
+            "books": [
+                "the book of men",
+                "hii",
+                "the book of women",
+                "The Brothers Karamazov",
+                "Brave New World",
+                "rushi"
+            ]
+        },
+        "aks": {},
+        "spider": {},
+        "admin": {},
+        "k": {
+            "books": []
+        }
+    },
+    "panelty":{
+        "rushi": "10"
+    },
+    "3": "3",
+    "aks": "11",
+    "k": "k"
+}

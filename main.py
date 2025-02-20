@@ -1,10 +1,12 @@
 import json
 import time
+from datetime import date
+
 
 
 
 print("\n" + "="*55)
-print("\t\t📚 LIBRARY MANAGEMENT SYSTEM")
+print("\t\t LIBRARY MANAGEMENT SYSTEM")
 print("="*55 + "\n")
 USER_FILE = "users.json"
 BOOKS_FILE = "books.json"
@@ -35,7 +37,6 @@ def register():
     print("User registered successfully!")
     time.sleep(2)
 
-# Function to login
 def login():
     global logged_in_user
     if logged_in_user is not None:
@@ -47,7 +48,7 @@ def login():
     except (FileNotFoundError, json.JSONDecodeError):
         users = {}
     print("Please login yourself!")
-    time.sleep(2)
+    time.sleep(1)
     username = input("Enter your username: ")
     password = input("Enter your password: ")
 
@@ -118,6 +119,8 @@ def addbook():
         time.sleep(2)
         
 
+from datetime import datetime, timedelta
+
 def borrow_book(query):
     if not logged_in_user:
         print("You must log in first!")
@@ -128,35 +131,61 @@ def borrow_book(query):
             books = json.load(file)
         
         with open(USER_FILE, "r") as file:
-            user=json.load(file)
+            users = json.load(file)
     except (FileNotFoundError, json.JSONDecodeError):
-        print(" No books available!")
+        print("No books available!")
         return
 
     for book in books:
         if query.lower() in book["title"].lower() or query.lower() in book["author"].lower():
             if book["available"] > 0:
                 book["available"] -= 1
-                book.setdefault("borrowers", []).append(logged_in_user)
-                if not isinstance(user["history"][logged_in_user]["books"], list):
-                    user["history"][logged_in_user]["books"] = []
-                user["history"][logged_in_user]["books"].append(str(book["title"]))
+
+                borrow_date = datetime.today().strftime('%Y-%m-%d')
+                due_date = (datetime.today() + timedelta(days=14)).strftime('%Y-%m-%d')
+
+                if "borrowers" not in book:
+                    book["borrowers"] = {}
+
+                book["borrowers"][logged_in_user] = {
+                    "borrow_date": borrow_date,
+                    "due_date": due_date
+                }
+
+                if "history" not in users:
+                    users["history"] = {}
+
+                if logged_in_user not in users["history"]:
+                    users["history"][logged_in_user] = {"books": []}
+
+                users["history"][logged_in_user]["books"].append({
+                    "title": book["title"],
+                    "borrow_date": borrow_date,
+                    "due_date": due_date
+                })
 
                 with open(BOOKS_FILE, "w") as file:
                     json.dump(books, file, indent=4)
+
                 with open(USER_FILE, "w") as file:
-                    json.dump(user, file, indent=4)
+                    json.dump(users, file, indent=4)
 
                 print(f" {book['title']} borrowed successfully!")
+                print(f" Due Date: {due_date}")
+                time.sleep(2)
                 return
             else:
                 print(f" {book['title']} is not available!")
+                time.sleep(2)
                 return
 
     print(" Book not found!")
 
-def return_book(){
-     if not logged_in_user:
+
+def return_book():
+
+    if not logged_in_user:
+    
         print("You must log in first!")
         return
     try:
@@ -167,13 +196,10 @@ def return_book(){
             user=json.load(file)
     except (FileNotFoundError, json.JSONDecodeError):
         print(" No books available!")
+        time.sleep(1)
         return
 
-        if 
 
-    
-
-}
 
 def check_availability(query):
     try:
@@ -233,10 +259,23 @@ def history():
         return
     time.sleep(3)
 
+def pan(user):
+    if logged_in_user is None:
+        login()
+        return
+    with open(BOOKS_FILE, "r") as file:
+        books = json.load(file)
+    with open(USER_FILE, "r") as file:
+        users=json.load(file)
+    if user not in users:
+        print("User not found")
+        return
+    else:
+        print(f'panalty is : {users["history"][logged_in_user]["pan"]}')
 
     
+    
 
-# Main Menu Loop
 while True:
     if logged_in_user is not None:
         print("\n" + "-"*55)
@@ -252,7 +291,8 @@ while True:
     print("\t6. Add Books (Admin Only)")
     print("\t7. Grant Admin Access (Admin Only)")
     print("\t8. View User History")
-    print("\t9. Exit")
+    print("\t9. View User Panalty")
+    print("\t10. Exit")
     print("="*61 + "\n")
 
     try:
@@ -307,16 +347,21 @@ while True:
         print("\t\tUSER HISTORY PORTAL")
         print("="*55)
         history()
-    elif choice == 9:
+    elif choice == 10:
         print("\n" + "="*55)
         print("\tTHANK YOU FOR USING LIBRARY MANAGEMENT SYSTEM!")
         print("\t\t      GOODBYE!")
         print("="*55 + "\n")
+        break
+    elif choice == 9:
+        print("\n" + "="*55)
+        print("\t\PANALTY HISTORY PORTAL")
+        print("="*55 + "\n")
+        pan(logged_in_user)
         break
     else:
         print("\n" + "!"*55)
         print("  INVALID CHOICE - PLEASE ENTER A NUMBER BETWEEN 1-9")
         print("!"*55)
 
-    # Add space between iterations
     print("\n" + "_"*55 + "\n")

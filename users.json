@@ -12,23 +12,19 @@
         "rushi": {
             "name": "rushi",
             "books": [
-                "the book of men",
-                "hii",
-                "the book of women",
-                "The Brothers Karamazov",
-                "Brave New World",
-                "rushi"
-            ]
-        },
-        "aks": {},
-        "spider": {},
-        "admin": {},
-        "k": {
-            "books": []
+                {
+                    "title": "1984",
+                    "borrow_date": "2025-02-20",
+                    "due_date": "2025-03-06"
+                },
+                {
+                    "title": "The Great Gatsby",
+                    "borrow_date": "2025-02-20",
+                    "due_date": "2025-03-06"
+                }
+            ],
+            "pan": 10
         }
-    },
-    "panelty":{
-        "rushi": "10"
     },
     "3": "3",
     "aks": "11",

@@ -5,7 +5,13 @@
         "genre": "Classic",
         "year": 1925,
         "copies": 5,
-        "available": 3
+        "available": 2,
+        "borrowers": {
+            "rushi": {
+                "borrow_date": "2025-02-20",
+                "due_date": "2025-03-06"
+            }
+        }
     },
     {
         "title": "To Kill a Mockingbird",
@@ -21,7 +27,13 @@
         "genre": "Dystopian",
         "year": 1949,
         "copies": 6,
-        "available": 4
+        "available": 3,
+        "borrowers": {
+            "rushi": {
+                "borrow_date": "2025-02-20",
+                "due_date": "2025-03-06"
+            }
+        }
     },
     {
         "title": "Moby Dick",
@@ -224,6 +236,11 @@
         "author": "ff",
         "year": 2,
         "copies": 2,
-        "available": 2
+        "available": 1,
+        "borrowers": {
+            "rushi": {
+                "date": "2017-"
+            }
+        }
     }
 ]

@@ -35,6 +35,7 @@ def register():
         json.dump(users, file, indent=4)
 
     print("User registered successfully!")
+    login()
     time.sleep(2)
 
 def login():
@@ -49,8 +50,14 @@ def login():
         users = {}
     print("Please login yourself!")
     time.sleep(1)
+    print("want to register ? Enter 3\n")
     username = input("Enter your username: ")
+    if(username=='3'):
+        register()
+        return 
     password = input("Enter your password: ")
+    
+
 
     if username in users and users[username] == password or users[username]["password"] == password:
         if username == 'admin' and users[username] == 'admin123':
@@ -80,7 +87,7 @@ def search_book(query):
     results = [book for book in books if query.lower() in book["title"].lower() or query.lower() in book["author"].lower()]
     
     if results:
-        print("🔍 Search Results:")
+        print(" Search Results:")
         for i, book in enumerate(results, start=1):
             print(f"{i}. {book['title']} by {book['author']} ({book['year']}) - Copies: {book['copies']}, Available: {book['available']}")
     else:
@@ -91,7 +98,9 @@ def addbook():
         print("You must log in first!")
         time.sleep(2)
         return
-    if logged_in_user is not 'admin':
+    with open(USER_FILE, "r") as file:
+        users = json.load(file)
+    if logged_in_user not in users["admin"]["access"]:
         print("You must be an admin to add books!")
         time.sleep(2)
         return
@@ -112,7 +121,7 @@ def addbook():
             "available": int(input("Number of Available Copies")),
         }
         
-        books.append(book)
+        books.append(book) 
         with open(BOOKS_FILE, "w") as file:
             json.dump(books, file, indent=4)
         print(f'{book_name} is added successfully')
@@ -120,6 +129,13 @@ def addbook():
         
 
 from datetime import datetime, timedelta
+
+def cal_pan():
+    with open(USER_FILE, "r") as file:
+        users = json.load(file)
+    pan=users["history"][logged_in_user]["books"]
+    
+
 
 def borrow_book(query):
     if not logged_in_user:
@@ -198,6 +214,8 @@ def return_book():
         print(" No books available!")
         time.sleep(1)
         return
+    
+
 
 
 
@@ -222,12 +240,12 @@ def check_availability(query):
 def grantaccess():
     if logged_in_user is None:
        login()
-    if logged_in_user is not 'admin':
+    with open(USER_FILE, "r") as file:
+        user = json.load(file)
+    if logged_in_user not in user["admin"]["access"]:
         print("You must be an admin to add books!")
         time.sleep(2)
         return
-    with open(USER_FILE,"r")as file:
-        user=json.load(file)
     gnuser=input("Enter username to provide access:")
     if gnuser  in user["admin"]["access"]:
         print(f"{gnuser} already has access")
@@ -272,6 +290,7 @@ def pan(user):
         return
     else:
         print(f'panalty is : {users["history"][logged_in_user]["pan"]}')
+        time.sleep(2)
 
     
     
@@ -296,7 +315,7 @@ while True:
     print("="*61 + "\n")
 
     try:
-        choice = int(input("| Enter your choice (1-9): "))
+        choice = int(input("| Enter your choice (1-10): "))
     except ValueError:
         print("\n" + "!"*55)
         print("  INVALID INPUT - PLEASE ENTER A NUMBER BETWEEN 1-9")
